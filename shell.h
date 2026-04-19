@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <string.h>
+#include <sysexits.h>
 
 /*
 ** Cores em ANSI para formatar as saídas do terminal
@@ -25,5 +26,15 @@
 #define RST "\033[0m"
 
 #define DEL "\n\t \v\f\r"
+#define CHILD 0
+
+typedef struct struct_builtin
+{
+    const char *builtin_name;
+    int (*foo)(char **);
+}   type_builtin;
+
+int shell_exit(char **);
+int shell_echo(char **);
 
 #endif
