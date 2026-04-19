@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <string.h>
 
 /*
 ** Cores em ANSI para formatar as saídas do terminal
@@ -22,5 +23,7 @@
 #define C "\033[1;36m"
 #define RED "\033[1;31m"
 #define RST "\033[0m"
+
+#define DEL "\n\t \v\f\r"
 
 #endif

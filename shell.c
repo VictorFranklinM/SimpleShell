@@ -30,30 +30,68 @@ char *shell_read_line(void)
     return buffer;
 }
 
+// ls -la file
+//  -> [ls]
+//  -> [-la]
+//  -> [file]
+char **shell_split_line(char *line)
+{
+    size_t bufsiz = BUFSIZ;
+    char **tokens = malloc(bufsiz * sizeof(char*));
+
+    if (tokens == NULL)
+    {
+        perror(RED"Falha no malloc"RST);
+        exit(EXIT_FAILURE);
+    }
+
+    unsigned int position = 0;
+
+    for (char *token = strtok(line, DEL); token; token = strtok(NULL, DEL))
+    {
+        // Se tem mais argumentos que o tamanho do vetor
+        if (position >= bufsiz)
+        {
+            bufsiz *= 2;
+
+            char **temp = realloc(tokens, bufsiz * sizeof(char*));
+            if (temp == NULL)
+            {
+                free(tokens);
+                perror(RED"Falha no realloc"RST);
+                exit(EXIT_FAILURE);
+            }
+
+            tokens = temp;
+        }
+
+        tokens[position++] = token;
+    }
+
+    tokens[position] = NULL; // Fim do comando
+    return tokens;
+}
+
 int main(int arg_counter, char **arg_vector)
 {
     char *line;
+    char **args;
 
     // REPL
     // Ler -> Avaliar -> Imprimir/Executar -> Loop
 
-    while (1)
+    // 1) Leitura e Loop
+    while (line = shell_read_line())
     {
-        // 1) Leitura
-        line = shell_read_line();
-
-        if(line == NULL)
-            break;
-
         printf("%s\n", line);
-
-        free(line);
 
         // 2) Get token
         // Talvez trocar pra lexing e parsing
+        args = shell_split_line(line);
 
         // Exec
-
+        free(args);
+        free(line);
     }
 
     return EXIT_SUCCESS;
